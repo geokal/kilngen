@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.turbo/
+.DS_Store
+# kilngen project-local files
+.kilngen/local.json
+.kilngen/cache/
+.kilngen/builds/
