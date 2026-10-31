@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../../schemas/kilngen.schema.json
+version: 1
+edition: 2026-11
+
+project:
+  name: petstore
+  display_name: Petstore
+  license: MIT
+
+environments:
+  production: https://petstore.example.com/v1
+
+auth:
+  default: [bearer]
+  schemes:
+    bearer: { type: http, scheme: bearer }
+
+client:
+  options:
+    api_key:
+      type: string
+      env: PETSTORE_API_KEY
+      required: true
+      auth: { scheme: bearer }
+  retries: { max: 2, backoff: exponential, retry_on: [408, 429, "5xx"] }
+
+errors:
+  404: NotFoundError
+  "5xx": InternalServerError
+
+pagination:
+  - name: cursor_page
+    type: cursor
+    request:
+      cursor: { param: starting_after, in: query }
+      limit: { param: limit, in: query }
+    response:
+      items: data
+      next_cursor: { from_last_item: id }
+      has_more: has_more
+
+resources:
+  $shared:
+    models:
+      error: "#/components/schemas/Error"
+  pets:
+    models:
+      pet: "#/components/schemas/Pet"
+    methods:
+      list: { endpoint: get /pets, pagination: cursor_page }
+      create: post /pets
+      retrieve: get /pets/{pet_id}
+      delete: delete /pets/{pet_id}
+    terraform:
+      resource: true
+      name: pet
+
+targets:
+  typescript:
+    package: "@petstore/sdk"
+  go:
+    module: github.com/example/petstore-go
+  cli:
+    binary: petstore
+    module: github.com/example/petstore-cli
+  mcp:
+    package: "@petstore/mcp"
+    tool_mode: endpoints

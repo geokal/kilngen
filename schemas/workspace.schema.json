@@ -1,0 +1,90 @@
+{
+  "$id": "https://kilngen.dev/schema/v1/workspace.schema.json",
+  "title": ".kilngen/workspace.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "openapi_specs": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "config": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targets": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "typescript",
+          "go",
+          "python",
+          "mcp",
+          "cli",
+          "terraform",
+          "docs"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "output_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "integration_branch": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "output_path"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "toolchain": {
+      "type": "string",
+      "enum": [
+        "host",
+        "docker"
+      ]
+    },
+    "release": {
+      "type": "object",
+      "properties": {
+        "profile": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "profile"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "name",
+    "openapi_specs",
+    "config"
+  ],
+  "additionalProperties": false
+}

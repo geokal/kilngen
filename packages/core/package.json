@@ -1,0 +1,23 @@
+{
+  "name": "@kilngen/core",
+  "version": "0.0.0",
+  "description": "kilngen core: config parsing, spec loading, diagnostics",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "yaml": "^2.8.0",
+    "zod": "^4.1.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@kilngen/core": ["./packages/core/src/index.ts"],
+      "@kilngen/workspace": ["./packages/workspace/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src", "packages/*/test", "scripts", "vitest.config.ts"]
+}
