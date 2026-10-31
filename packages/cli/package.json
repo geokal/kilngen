@@ -1,0 +1,21 @@
+{
+  "name": "kilngen",
+  "version": "0.0.0",
+  "description": "Generate SDKs, docs, CLIs, MCP servers and Terraform providers from OpenAPI, locally",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "kilngen": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@kilngen/core": "workspace:*",
+    "@kilngen/workspace": "workspace:*",
+    "commander": "^14.0.0"
+  }
+}

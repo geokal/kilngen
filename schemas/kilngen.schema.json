@@ -1,0 +1,1038 @@
+{
+  "$id": "https://kilngen.dev/schema/v1/kilngen.schema.json",
+  "title": "kilngen.yml",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "edition": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+    },
+    "project": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri"
+        },
+        "support_email": {
+          "type": "string",
+          "format": "email",
+          "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "overlays": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "environments": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "schemes": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "http",
+                  "apiKey",
+                  "oauth2",
+                  "openIdConnect"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": {}
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "client": {
+      "type": "object",
+      "properties": {
+        "options": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "env": {
+                "type": "string"
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "default": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "header": {
+                "type": "string"
+              },
+              "auth": {
+                "type": "object",
+                "properties": {
+                  "scheme": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "scheme"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "retries": {
+          "type": "object",
+          "properties": {
+            "max": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "backoff": {
+              "type": "string",
+              "enum": [
+                "exponential",
+                "constant"
+              ]
+            },
+            "initial_ms": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "max_ms": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "retry_on": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 599
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^([1-5]\\d\\d|[1-5]xx)$"
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "max"
+          ],
+          "additionalProperties": false
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "idempotency": {
+          "type": "object",
+          "properties": {
+            "header": {
+              "type": "string"
+            },
+            "methods": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "get",
+                  "put",
+                  "post",
+                  "delete",
+                  "options",
+                  "head",
+                  "patch",
+                  "trace"
+                ]
+              }
+            }
+          },
+          "required": [
+            "header"
+          ],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "errors": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^([1-5]\\d\\d|[1-5]xx)$"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "pagination": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "cursor",
+              "cursor_from_item",
+              "next_url",
+              "offset",
+              "page_number"
+            ]
+          },
+          "request": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "param": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string",
+                  "enum": [
+                    "query",
+                    "header",
+                    "body"
+                  ]
+                }
+              },
+              "required": [
+                "param"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "response": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "from_last_item": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "from_last_item"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "streaming": {
+      "type": "object",
+      "properties": {
+        "sse": {
+          "type": "object",
+          "properties": {
+            "content_type": {
+              "type": "string"
+            },
+            "done_sentinel": {
+              "type": "string"
+            },
+            "error_event": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "resources": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema0"
+      }
+    },
+    "targets": {
+      "type": "object",
+      "properties": {
+        "typescript": {
+          "type": "object",
+          "properties": {
+            "output": {
+              "type": "string"
+            },
+            "edition": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+            },
+            "options": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "package": {
+              "type": "string"
+            },
+            "runtime": {
+              "type": "object",
+              "properties": {
+                "min_node": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "package"
+          ],
+          "additionalProperties": false
+        },
+        "go": {
+          "type": "object",
+          "properties": {
+            "output": {
+              "type": "string"
+            },
+            "edition": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+            },
+            "options": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "module": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "module"
+          ],
+          "additionalProperties": false
+        },
+        "python": {
+          "type": "object",
+          "properties": {
+            "output": {
+              "type": "string"
+            },
+            "edition": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+            },
+            "options": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "package": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "package"
+          ],
+          "additionalProperties": false
+        },
+        "mcp": {
+          "type": "object",
+          "properties": {
+            "output": {
+              "type": "string"
+            },
+            "edition": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+            },
+            "options": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "package": {
+              "type": "string"
+            },
+            "tool_mode": {
+              "type": "string",
+              "enum": [
+                "endpoints",
+                "code"
+              ]
+            },
+            "transports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "stdio",
+                  "streamable_http"
+                ]
+              }
+            },
+            "client_profiles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "code_execution": {
+              "type": "object",
+              "properties": {
+                "runtime": {
+                  "type": "string",
+                  "enum": [
+                    "deno"
+                  ]
+                },
+                "allow_hosts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "runtime"
+              ],
+              "additionalProperties": false
+            },
+            "include_tools": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "exclude_tools": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "bundle": {
+              "type": "object",
+              "properties": {
+                "mcpb": {
+                  "type": "boolean"
+                },
+                "docker": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "package"
+          ],
+          "additionalProperties": false
+        },
+        "cli": {
+          "type": "object",
+          "properties": {
+            "output": {
+              "type": "string"
+            },
+            "edition": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+            },
+            "options": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "binary": {
+              "type": "string"
+            },
+            "module": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "binary",
+            "module"
+          ],
+          "additionalProperties": false
+        },
+        "terraform": {
+          "type": "object",
+          "properties": {
+            "output": {
+              "type": "string"
+            },
+            "edition": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+            },
+            "options": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "provider": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*$"
+            },
+            "module": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "provider",
+            "module"
+          ],
+          "additionalProperties": false
+        },
+        "docs": {
+          "type": "object",
+          "properties": {
+            "output": {
+              "type": "string"
+            },
+            "edition": {
+              "type": "string",
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+            },
+            "options": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "framework": {
+              "type": "string",
+              "enum": [
+                "astro-starlight"
+              ]
+            },
+            "languages": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "guides_dir": {
+              "type": "string"
+            },
+            "search": {
+              "type": "object",
+              "properties": {
+                "prose": {
+                  "type": "string",
+                  "enum": [
+                    "pagefind"
+                  ]
+                },
+                "reference": {
+                  "type": "string",
+                  "enum": [
+                    "minisearch",
+                    "orama"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            "llm": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "codegen": {
+      "type": "object",
+      "properties": {
+        "output_dir": {
+          "type": "string"
+        },
+        "git": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "generated_branch": {
+              "type": "string"
+            },
+            "integration_branch": {
+              "type": "string"
+            },
+            "on_conflict": {
+              "type": "string",
+              "enum": [
+                "stop",
+                "branch"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "keep_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "formatters": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "host",
+                "docker"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "diagnostics": {
+      "type": "object",
+      "properties": {
+        "ignore": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K\\d{4}$"
+          }
+        },
+        "error": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K\\d{4}$"
+          }
+        },
+        "warn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^K\\d{4}$"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "edition",
+    "project"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "models": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^#\\/components\\/schemas\\/[^/]+$"
+          }
+        },
+        "methods": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(get|put|post|delete|options|head|patch|trace)\\s+\\/\\S*$"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "endpoint": {
+                    "type": "string",
+                    "pattern": "^(get|put|post|delete|options|head|patch|trace)\\s+\\/\\S*$"
+                  },
+                  "paginated": {
+                    "type": "boolean"
+                  },
+                  "pagination": {
+                    "type": "string"
+                  },
+                  "stream": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "when_param": {
+                            "type": "string"
+                          },
+                          "event_type": {
+                            "type": "string",
+                            "pattern": "^#\\/components\\/schemas\\/[^/]+$"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "unwrap": {
+                    "type": "string"
+                  },
+                  "idempotent": {
+                    "type": "boolean"
+                  },
+                  "deprecated": {
+                    "type": [
+                      "boolean",
+                      "string"
+                    ]
+                  },
+                  "positional_params": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "body_param_name": {
+                    "type": "string"
+                  },
+                  "response": {
+                    "type": "string",
+                    "enum": [
+                      "json",
+                      "binary",
+                      "text"
+                    ]
+                  },
+                  "skip": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "typescript",
+                            "go",
+                            "python",
+                            "mcp",
+                            "cli",
+                            "terraform",
+                            "docs"
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  "docs": {
+                    "type": "object",
+                    "properties": {
+                      "summary": {
+                        "type": "string"
+                      },
+                      "examples": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "endpoint"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "subresources": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/__schema0"
+          }
+        },
+        "skip": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "typescript",
+                  "go",
+                  "python",
+                  "mcp",
+                  "cli",
+                  "terraform",
+                  "docs"
+                ]
+              }
+            }
+          ]
+        },
+        "terraform": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "resource": {
+                  "type": "boolean"
+                },
+                "data_source": {
+                  "type": "boolean"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "id_attribute": {
+                  "type": "string"
+                },
+                "import_id": {
+                  "type": "string"
+                },
+                "update_strategy": {
+                  "type": "string",
+                  "enum": [
+                    "patch",
+                    "put"
+                  ]
+                },
+                "sensitive": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "mcp": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tools": {
+                  "type": "object",
+                  "properties": {
+                    "include": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "exclude": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "read_only": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "cli": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "hidden": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

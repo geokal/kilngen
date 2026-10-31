@@ -4,7 +4,7 @@ kilngen offers features similar to Stainless, a proprietary product. To keep kil
 
 ## Allowed sources
 
-- Stainless's **public documentation**, to understand *what* features exist (feature names, user-visible behavior, config concepts). Describe the behavior in your own words in an issue or design doc before implementing it.
+- Stainless's **public documentation**, to understand _what_ features exist (feature names, user-visible behavior, config concepts). Describe the behavior in your own words in an issue or design doc before implementing it.
 - The **Apache-2.0** repository `stainless-api/stainless-api-cli`, as a behavioral reference for CLI UX (commands, flags, output formats, workspace discovery).
 - Public standards and their docs: OpenAPI, JSON Schema, MCP, Terraform plugin framework, language style guides.
 - Open-source SDK generators and SDKs under licenses compatible with MIT, with attribution where their license requires it.

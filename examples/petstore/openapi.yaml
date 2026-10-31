@@ -1,0 +1,97 @@
+openapi: 3.1.0
+info:
+  title: Petstore
+  version: 1.0.0
+servers:
+  - url: https://petstore.example.com/v1
+security:
+  - bearer: []
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      summary: List pets
+      parameters:
+        - name: starting_after
+          in: query
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, maximum: 100 }
+      responses:
+        "200":
+          description: A page of pets
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, has_more]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/Pet" }
+                  has_more: { type: boolean }
+    post:
+      operationId: createPet
+      summary: Create a pet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PetCreate" }
+      responses:
+        "201":
+          description: The created pet
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Pet" }
+  /pets/{pet_id}:
+    parameters:
+      - name: pet_id
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      operationId: retrievePet
+      summary: Retrieve a pet
+      responses:
+        "200":
+          description: The pet
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Pet" }
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    delete:
+      operationId: deletePet
+      summary: Delete a pet
+      responses:
+        "204":
+          description: Deleted
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+  schemas:
+    Pet:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        tag: { type: string }
+    PetCreate:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        tag: { type: string }
+    Error:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string }

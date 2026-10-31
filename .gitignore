@@ -8,3 +8,4 @@ coverage/
 .kilngen/local.json
 .kilngen/cache/
 .kilngen/builds/
+examples/*/out/

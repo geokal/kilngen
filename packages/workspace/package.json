@@ -1,0 +1,23 @@
+{
+  "name": "@kilngen/workspace",
+  "version": "0.0.0",
+  "description": "kilngen workspace discovery (.kilngen/workspace.json)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@kilngen/core": "workspace:*",
+    "zod": "^4.1.0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../schemas/workspace.schema.json",
+  "version": 1,
+  "name": "petstore",
+  "openapi_specs": ["../openapi.yaml"],
+  "config": "../kilngen.yml",
+  "targets": {
+    "typescript": { "output_path": "../out/petstore-ts", "integration_branch": "main" },
+    "go": { "output_path": "../out/petstore-go" },
+    "cli": { "output_path": "../out/petstore-cli" },
+    "mcp": { "output_path": "../out/petstore-ts" }
+  },
+  "toolchain": "host"
+}
